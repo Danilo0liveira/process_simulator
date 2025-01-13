@@ -8,8 +8,8 @@ process_model = pH_model
 
 # Preocess Dimensions
 
-num_in = 3
-num_out = 3
+num_in = 1
+num_out = 1
 num_dist = 1
 
 # Steady State Data
@@ -35,5 +35,5 @@ hs = 14
 
 state = [hs, wa4s, wb4s, pHins]
 MV = [q3s]
-PV = [hs]
+PV = hs
 
