@@ -6,18 +6,27 @@ import numpy as np
 
 from process_config import *
 
-fig, ax = plt.subplots()
-line, = ax.plot([], [])
+fig, ax = plt.subplots(ncols=num_out, nrows=2)
+mv_line = [ax[0,i].plot([], [])[0] for i in range(num_out)]
+pv_line = [ax[1,i].plot([], [])[0] for i in range(num_out)]
 
-ax.set_xlabel('Tempo [s]')
-ax.set_ylabel('pH')
+for i in range(num_out):
+    for j in range(2):
+        ax[j,i].set_xlabel('Tempo [s]')
+    ax[0,i].set_ylabel('MV'+str(i))
+    ax[1,i].set_ylabel('PV'+str(i))
 
 def update_plot():
-    line.set_xdata(time[:k+1])
-    line.set_ydata(pvt[0, :k+1])
+    for i in range(num_out):
+        mv_line[i].set_xdata(time[:k+1])
+        mv_line[i].set_ydata(mvt[i, :k+1])
+        
+        pv_line[i].set_xdata(time[:k+1])
+        pv_line[i].set_ydata(pvt[i, :k+1])
 
-    ax.relim()
-    ax.autoscale_view(True, True, True)
+        for j in range(2):
+            ax[j,i].relim()
+            ax[j,i].autoscale_view(True, True, True)
 
     fig.canvas.draw()
     fig.canvas.flush_events()
@@ -45,7 +54,7 @@ PV_node = [ua_client.get_node(f"ns={namespace_index}; s=Processo10"+str(i+1)+".P
 
 time = np.arange(0, tmax, ts)
 mvt = np.zeros(shape=(num_out, time.size))
-pvt = np.zeros(shape=(num_in, time.size))
+pvt = np.zeros(shape=(num_out, time.size))
 
 for k in range(time.size):
 
